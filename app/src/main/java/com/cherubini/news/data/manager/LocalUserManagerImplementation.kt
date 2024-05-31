@@ -8,25 +8,25 @@ import com.cherubini.news.domain.manager.LocalUserManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-private const val USER_SETTINGS_DATA_STORE =  "userSettings"
-private const val APP_ENTRY_DATA_STORE =  "appEntry"
+private const val DATA_STORE =  "dataStore"
+private const val LOGGED_IN_DATA_STORE =  "loggedIn"
 
 class LocalUserManagerImplementation(private val context: Context): LocalUserManager {
-    override suspend fun saveAppEntry() {
+    override suspend fun login() {
         context.dataStore.edit { settings ->
-            settings[PreferencesKeys.APP_ENTRY] = true
+            settings[PreferencesKeys.LOGGED_IN] = true
         }
     }
 
-    override fun readAppEntry(): Flow<Boolean> {
+    override fun isLoggedIn(): Flow<Boolean> {
         return context.dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.APP_ENTRY] ?: false
+            preferences[PreferencesKeys.LOGGED_IN] ?: false
         }
     }
 }
 
-private val Context.dataStore by preferencesDataStore(USER_SETTINGS_DATA_STORE)
+private val Context.dataStore by preferencesDataStore(DATA_STORE)
 
 private object PreferencesKeys{
-    val APP_ENTRY = booleanPreferencesKey(name = APP_ENTRY_DATA_STORE)
+    val LOGGED_IN = booleanPreferencesKey(name = LOGGED_IN_DATA_STORE)
 }

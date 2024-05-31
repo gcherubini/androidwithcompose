@@ -3,10 +3,10 @@ package com.cherubini.news.di
 import android.app.Application
 import com.cherubini.news.data.manager.LocalUserManagerImplementation
 import com.cherubini.news.domain.manager.LocalUserManager
-import com.cherubini.news.domain.usecases.AppEntryUseCases
-import com.cherubini.news.domain.usecases.ReadAppEntryUseCase
-import com.cherubini.news.domain.usecases.SaveAppEntryUseCase
-import com.cherubini.news.presentation.home.HomeViewModel
+import com.cherubini.news.domain.usecases.CheckUserLoggedInUseCase
+import com.cherubini.news.domain.usecases.LoginUseCase
+import com.cherubini.news.presentation.detail.HomeViewModel
+import com.cherubini.news.presentation.home.LoginViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,14 +22,18 @@ object AppModule {
         LocalUserManagerImplementation(application)
 
     @Provides
-    @Singleton
-    fun provideAppEntryUseCases(localUserManager: LocalUserManager): AppEntryUseCases =
-        AppEntryUseCases(
-            readAppEntry = ReadAppEntryUseCase(localUserManager),
-            saveAppEntry = SaveAppEntryUseCase(localUserManager)
-        )
+    fun provideLoginUseCase(localUserManager: LocalUserManager): LoginUseCase =
+        LoginUseCase(localUserManager)
 
     @Provides
-    fun provideHomeViewModel(): HomeViewModel =
-        HomeViewModel()
+    fun provideCheckLoggedInUseCase(localUserManager: LocalUserManager): CheckUserLoggedInUseCase =
+        CheckUserLoggedInUseCase(localUserManager)
+
+    @Provides
+    fun provideLoginViewModel(loginUseCase: LoginUseCase): LoginViewModel =
+        LoginViewModel(loginUseCase = loginUseCase)
+
+    @Provides
+    fun provideHomeViewModel(checkLoggedInUseCase: CheckUserLoggedInUseCase): HomeViewModel =
+        HomeViewModel(checkUserLoggedInUseCase = checkLoggedInUseCase)
 }

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">News</string>
+    <string name="login_logo_content_description">Application Logo</string>
+    <string name="login_sign_in_username">username</string>
+    <string name="login_sign_in_password">password</string>
+    <string name="login_sign_in_button">Sign In</string>
 </resources>

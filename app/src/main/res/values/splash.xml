@@ -2,7 +2,7 @@
 <resources>
     <style name="App.Starting.Theme" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#FFFF</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/news</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/news_logo</item>
         <item name="postSplashScreenTheme">@style/Theme.News</item>
     </style>
 </resources>
