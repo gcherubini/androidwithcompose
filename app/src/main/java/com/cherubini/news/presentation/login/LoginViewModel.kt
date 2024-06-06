@@ -1,12 +1,12 @@
-package com.cherubini.news.presentation.home
+package com.cherubini.news.presentation.login
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.cherubini.news.domain.usecases.LoginUseCase
-import com.cherubini.news.presentation.navgraph.DetailScreenRoute
+import com.cherubini.news.domain.usecases.StoreUserLoggedInUseCase
+import com.cherubini.news.presentation.navgraph.HomeRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,10 +19,13 @@ private const val DEFAULT_ERROR_MESSAGE = "Fill the username and password fields
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    val loginUseCase: LoginUseCase
+    val storeUserLoggedInUseCase: StoreUserLoggedInUseCase
 ): ViewModel() {
-    var inputtedUserName by mutableStateOf(EMPTY_TEXT)
-        private set
+    // flow state
+    private val _inputtedUserName = MutableStateFlow(EMPTY_TEXT)
+    val inputtedUserName = _inputtedUserName.asStateFlow()
+
+    // compose state
     var inputtedPassword by mutableStateOf(EMPTY_TEXT)
         private set
 
@@ -32,11 +35,11 @@ class LoginViewModel @Inject constructor(
     var isAdvanceButtonEnabled by mutableStateOf(false)
         private set
 
-    private var _nextRouteStateFlow: MutableStateFlow<DetailScreenRoute?> = MutableStateFlow(null)
-    var nextRouteStateFlow : StateFlow<DetailScreenRoute?> = _nextRouteStateFlow.asStateFlow()
+    private var _nextRouteStateFlow: MutableStateFlow<HomeRoute?> = MutableStateFlow(null)
+    var nextRouteStateFlow : StateFlow<HomeRoute?> = _nextRouteStateFlow.asStateFlow()
 
     fun onInputUserName(inputtedUserName: String) {
-        this.inputtedUserName = inputtedUserName
+        this._inputtedUserName.value = inputtedUserName
         toggleSignInButton()
     }
 
@@ -46,24 +49,24 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun toggleSignInButton() {
-        if(inputtedUserName.isBlank() || inputtedPassword.isBlank()) {
+        if(inputtedUserName.value.isBlank() || inputtedPassword.isBlank()) {
             isAdvanceButtonEnabled = false
         } else {
             isAdvanceButtonEnabled = true
         }
     }
 
-    fun onAdvanceButtonClick() {
+    fun onSubmitButtonClick() {
         if(validateFields()) {
             viewModelScope.launch {
-                loginUseCase()
+                storeUserLoggedInUseCase(inputtedUserName.value)
             }
-            _nextRouteStateFlow.value = DetailScreenRoute(inputtedUserName)
+            _nextRouteStateFlow.value = HomeRoute(inputtedUserName.value)
         }
     }
 
     private fun validateFields(): Boolean {
-        return if(inputtedUserName.isBlank() || inputtedPassword.isBlank()) {
+        return if(inputtedUserName.value.isBlank() || inputtedPassword.isBlank()) {
             errorMessage = DEFAULT_ERROR_MESSAGE
             false
         } else {

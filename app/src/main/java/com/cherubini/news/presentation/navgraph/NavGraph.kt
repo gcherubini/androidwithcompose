@@ -5,38 +5,65 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.cherubini.news.presentation.detail.HomeComposable
-import com.cherubini.news.presentation.detail.HomeViewModel
-import com.cherubini.news.presentation.home.LoginComposable
-import com.cherubini.news.presentation.home.LoginViewModel
+import com.cherubini.news.presentation.home.HomeComposable
+import com.cherubini.news.presentation.home.HomeViewModel
+import com.cherubini.news.presentation.login.LoginComposable
+import com.cherubini.news.presentation.login.LoginViewModel
 
 @Composable
-fun NavGraph() {
+fun NavGraph(userLoggedIn: String?) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = HomeScreenRoute) {
-        composable<HomeScreenRoute> {
+    val startDestination = if(userLoggedIn.isNullOrEmpty()) {
+        LoginRoute
+    } else {
+        HomeRoute(userLoggedIn)
+    }
+
+    NavHost(navController = navController, startDestination = startDestination) {
+        composable<LoginRoute> {
             val viewModel = hiltViewModel<LoginViewModel>()
 
             val nextRouteStateFlow by viewModel.nextRouteStateFlow.collectAsState()
-
-            LaunchedEffect(key1 = nextRouteStateFlow) {
-                nextRouteStateFlow?.let {
-                    navController.navigate(it)
-                }
-            }
+            LaunchedEffectNavigation(nextRouteStateFlow, navController)
 
             LoginComposable(viewModel)
         }
-        composable<DetailScreenRoute> {
-            val args = it.toRoute<DetailScreenRoute>()
+        composable<HomeRoute> {
+            val args = it.toRoute<HomeRoute>()
 
             val viewModel = hiltViewModel<HomeViewModel>()
-            HomeComposable(name = args.userName, viewModel)
+            val logoutStateFlow by viewModel.logoutStateFlow.collectAsState()
+            LaunchedEffectNavigation(logoutStateFlow, navController)
+
+            HomeComposable(
+                userNameArg = args.userName,
+                storedUserLoggedIn = viewModel.storedUserLoggedIn,
+                news = viewModel.news,
+                isLoading = viewModel.isLoading,
+                errorMessage = viewModel.errorMessage,
+                onLogoutButtonClick = {
+                    viewModel.onLogoutClick()
+                },
+                loadingMessage = viewModel.animatedLoadingMessage.collectAsState("Loading")
+            )
+        }
+    }
+}
+
+@Composable
+private fun LaunchedEffectNavigation(
+    nextRouteStateFlow: Route?,
+    navController: NavHostController
+) {
+    LaunchedEffect(key1 = nextRouteStateFlow) {
+        nextRouteStateFlow?.let { nextRoute ->
+            navController.navigate(nextRoute)
         }
     }
 }

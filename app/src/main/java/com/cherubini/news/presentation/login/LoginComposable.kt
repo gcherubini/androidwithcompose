@@ -1,4 +1,4 @@
-package com.cherubini.news.presentation.home
+package com.cherubini.news.presentation.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +30,8 @@ import com.cherubini.news.presentation.Dimens
 @Composable
 fun LoginComposable(viewModel: LoginViewModel) {
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    val inputUserName = viewModel.inputtedUserName.collectAsState()
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -49,7 +52,7 @@ fun LoginComposable(viewModel: LoginViewModel) {
         Text(text = stringResource(id = R.string.login_sign_in_username))
         Spacer(modifier = Modifier.height(Dimens.SmallPadding))
         TextField(
-            value = viewModel.inputtedUserName,
+            value = inputUserName.value,
             onValueChange = {
                 viewModel.onInputUserName(it)
             },
@@ -80,7 +83,7 @@ fun LoginComposable(viewModel: LoginViewModel) {
         // sign in button
         Button(
             onClick = {
-                viewModel.onAdvanceButtonClick()
+                viewModel.onSubmitButtonClick()
             },
             enabled = viewModel.isAdvanceButtonEnabled,
             modifier = Modifier.align(Alignment.CenterHorizontally)

@@ -84,6 +84,7 @@ dependencies {
     implementation(libs.moshi.adapters)
     implementation(libs.dagger.hilt)
     implementation(libs.dagger.hilt.navigation.compose)
+    implementation(libs.coil)
     kapt(libs.dagger.hilt.compiler)
 }
 

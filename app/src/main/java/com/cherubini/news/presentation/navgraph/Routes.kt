@@ -2,10 +2,12 @@ package com.cherubini.news.presentation.navgraph
 
 import kotlinx.serialization.Serializable
 
-@Serializable
-object HomeScreenRoute
+interface Route
 
 @Serializable
-data class DetailScreenRoute(
+object LoginRoute: Route
+
+@Serializable
+data class HomeRoute(
     val userName: String
-)
+): Route

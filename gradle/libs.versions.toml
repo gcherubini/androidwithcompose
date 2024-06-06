@@ -22,6 +22,7 @@ lifecycleRuntimeCompose = "2.8.0"
 lifecycleViewModelCompose = "2.8.0"
 kotlinxSerialization = "1.6.3"
 kotlinxSerializationPlugin = "2.0.0"
+coil = "2.6.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +55,7 @@ moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", versio
 dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
 dagger-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "daggerHiltNavigationCompose" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHilt" }
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
