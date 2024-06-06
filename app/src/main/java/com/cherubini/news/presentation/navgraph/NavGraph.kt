@@ -50,7 +50,7 @@ fun NavGraph(userLoggedIn: String?) {
                 onLogoutButtonClick = {
                     viewModel.onLogoutClick()
                 },
-                loadingMessage = viewModel.animatedLoadingMessage.collectAsState("Loading")
+                loadingMessage = viewModel.animatedLoadingMessage.collectAsState("Loading").value
             )
         }
     }

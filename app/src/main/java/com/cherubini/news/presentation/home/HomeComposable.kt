@@ -29,9 +29,8 @@ fun HomeComposable(
     errorMessage: String?,
     isLoading: Boolean?,
     onLogoutButtonClick: () -> Unit,
-    loadingMessage: State<String>,
-
-    ) {
+    loadingMessage: String
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -94,9 +93,9 @@ fun NewItem(newResponse: NewResponse) {
 }
 
 @Composable
-fun LoadingItem(loadingMessage: State<String>) {
+fun LoadingItem(loadingMessage: String) {
     Text(
-        text = loadingMessage.value,
+        text = loadingMessage,
         textAlign = TextAlign.Center,
         color = Color.Blue,
         modifier = Modifier
@@ -114,16 +113,20 @@ fun ErrorItem(errorMessage: String) {
     )
 }
 
-//@PreviewScreenSizes
-//@Composable
-//fun PreviewDifferentScreenSizes() {
-//    HomeComposable(
-//        userNameArg = "example of argument",
-//        storedUserLoggedIn = "Stored user name in Data Store",
-//        news = listOf(NewResponse("any", "New mocked title", "any")),
-//        errorMessage = null,
-//        isLoading = false,
-//        onLogoutButtonClick = {},
-//        loadingMessage = viewModel.loadingMessage.collectAsState("Loading"),
-//    )
-//}
+@PreviewScreenSizes
+@Composable
+fun PreviewDifferentScreenSizes() {
+    HomeComposable(
+        userNameArg = "example of argument",
+        storedUserLoggedIn = "Stored user name in Data Store",
+        news = listOf(
+            NewResponse("any", "New 01", "Lorem ipsum dotler husjan math audacity."),
+            NewResponse("any", "New 02", "Lorem ipsum dotler husjan math audacity."),
+            NewResponse("any", "New 03", "Lorem ipsum dotler husjan math audacity."),
+            ),
+        errorMessage = null,
+        isLoading = false,
+        onLogoutButtonClick = {},
+        loadingMessage = "loading..",
+    )
+}
